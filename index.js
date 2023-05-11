@@ -8,11 +8,9 @@ app.use(cors());
 app.use(express.json());
 
 app.post('/users', async (req, res) => {
-    const users = db('users');
-
     const { displayName, email, photoURL } = req.body;
 
-    let alreadyExistsStatus = 200;
+    const users = db('users');
 
     const [user] = await users.where({ email });
 
@@ -23,10 +21,10 @@ app.post('/users', async (req, res) => {
             name: displayName,
         });
 
-        alreadyExistsStatus = 201;
+        return res.sendStatus(201);
     }
 
-    res.sendStatus(alreadyExistsStatus);
+    res.sendStatus(200);
 });
 
 app.listen(4000, () => {
