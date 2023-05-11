@@ -2,29 +2,31 @@ const cors = require('cors');
 const express = require('express');
 const app = express();
 const knexConfig = require('./knexfile')[process.env.NODE_ENV || 'development'];
-const knex = require('knex')(knexConfig);
+const db = require('knex')(knexConfig);
 
 app.use(cors());
 app.use(express.json());
 
-const users = knex('users');
-
 app.post('/users', async (req, res) => {
+    const users = db('users');
+
     const { displayName, email, photoURL } = req.body;
 
-    const [user] = await users.where('email', email);
+    let alreadyExistsStatus = 200;
 
-    if (user) {
-        return res.sendStatus(200);
+    const [user] = await users.where({ email });
+
+    if (!user) {
+        await users.insert({
+            email,
+            photo: photoURL,
+            name: displayName,
+        });
+
+        alreadyExistsStatus = 201;
     }
 
-    await users.insert({
-        email,
-        photo: photoURL,
-        name: displayName,
-    });
-
-    res.sendStatus(201);
+    res.sendStatus(alreadyExistsStatus);
 });
 
 app.listen(4000, () => {
