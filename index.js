@@ -34,7 +34,8 @@ app.post('/users', async (req, res) => {
 
 app.ws('/messages', (ws, req) => {
     ws.on('message', async (message) => {
-        const data = await chat(message);
+        const formmatMessage = JSON.parse(message);
+        const data = await chat(formmatMessage, db);
 
         data.on('data', text => {
             let formmatText = text.toString();
