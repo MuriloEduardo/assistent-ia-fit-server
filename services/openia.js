@@ -8,13 +8,24 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 const chat = async content => {
-    const { data } = await openai.createChatCompletion({
-        model: 'gpt-3.5-turbo',
-        messages: [
-            { role: 'system', content: 'Só de respostas que envolvam saúde atividades físicas, lazer e alimentação. Seu único objetivo é ajudar o usuário a ter dicas sobre rotinas, dietas, treinos, coisas para sair do tédio. Seja sempre curto e direto, preferencialmente trazendo listas de coisas a fazer.' },
-            { role: 'user', content },
-        ],
-    });
+    const { data } = await openai.createChatCompletion(
+        {
+            stream: true,
+            model: 'gpt-3.5-turbo',
+            temperature: 0,
+            messages: [
+                {
+                    role: 'system', content: `
+                Só de respostas que envolvam saúde atividades físicas, lazer e alimentação.
+                Seu único objetivo é ajudar o usuário a ter dicas sobre rotinas, dietas, treinos, coisas para sair do tédio.
+                Responsa com poucas palavras e de forma concisa, preferencialmente trazendo listas de coisas a fazer, bem formatado.
+                `
+                },
+                { role: 'user', content },
+            ],
+        },
+        { responseType: 'stream' },
+    );
 
     return data;
 };

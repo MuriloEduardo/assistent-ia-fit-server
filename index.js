@@ -34,11 +34,34 @@ app.post('/users', async (req, res) => {
 
 app.ws('/messages', (ws, req) => {
     ws.on('message', async (message) => {
-        const response = await chat(message);
+        const data = await chat(message);
 
-        const { choices: [{ message: { content } }] } = response;
+        data.on('data', text => {
+            let formmatText = text.toString();
+            formmatText = formmatText.replaceAll('data: ', '');
 
-        ws.send(content);
+            if (formmatText.includes('[DONE]')) return;
+
+            try {
+                JSON.parse(formmatText);
+            } catch (error) {
+                let messages = formmatText.split('\n');
+
+                if (messages.length) {
+                    messages = messages.filter(str => str !== '');
+
+                    for (const str of messages) {
+                        ws.send(str);
+                    }
+
+                    return;
+                }
+            }
+
+            ws.send(formmatText);
+        });
+
+        data.on('error', err => console.error(err));
     });
 });
 
