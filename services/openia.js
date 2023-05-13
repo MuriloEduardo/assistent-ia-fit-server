@@ -12,11 +12,16 @@ const chat = async (email, content, db) => {
     const instructionsTable = db('instructions');
     const personalInformationTable = db('personal_information');
 
-    const [user] = await users.where({ email });
+    let [user] = await users.where({ email });
     let instructions = await instructionsTable.where({ user_id: user?.id });
     let [personalInformation] = await personalInformationTable.where({ user_id: user?.id });
 
-    personalInformation = Object.entries(personalInformation).map(([key, value]) => `${key}: ${value}`).join(', ');
+    const makeObjToString = (obj) => {
+        Object.entries(obj).map(([key, value]) => `${key}: ${value}`).join(', ')
+    };
+
+    user = makeObjToString(user);
+    personalInformation = makeObjToString(personalInformation);
 
     let formatedInstructions = instructions.map(({ content }) => ({
         content,
@@ -24,7 +29,12 @@ const chat = async (email, content, db) => {
     }));
 
     formatedInstructions = [...formatedInstructions, {
-        content: `Informações pessoais sobre usuário: ${personalInformation}`,
+        content: `Informações sobre usuário: ${user}`,
+        role: 'system',
+    }];
+
+    formatedInstructions = [...formatedInstructions, {
+        content: `Informações físicas sobre usuário: ${personalInformation}`,
         role: 'system',
     }];
 
