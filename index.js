@@ -29,13 +29,72 @@ app.post('/users', async (req, res) => {
         return res.sendStatus(201);
     }
 
-    res.sendStatus(200);
+    res.sendStatus(204);
+});
+
+app.patch('/users/:email', async (req, res) => {
+    const { email } = req.params;
+    const { sex, age, weight, height, current_physical_activity_level, physical_activities_already_practice } = req.body;
+
+    const users = db('users');
+    const informations = db('personal_information');
+
+    const [user] = await users.where({ email });
+
+    if (!user) return res.sendStatus(400);
+
+    const [information] = await informations.where({ user_id: user.id });
+
+    if (!information) {
+        await informations.insert({
+            sex,
+            age,
+            weight,
+            height,
+            user_id: user.id,
+            current_physical_activity_level,
+            physical_activities_already_practice,
+        });
+
+        return res.sendStatus(201);
+    }
+
+    await informations
+        .where({ user_id: user.id })
+        .update({
+            sex,
+            age,
+            weight,
+            height,
+            current_physical_activity_level,
+            physical_activities_already_practice,
+        });
+
+    res.sendStatus(204);
+});
+
+app.get('/users/:email', async (req, res) => {
+    const { email } = req.params;
+
+    const users = db('users');
+    const informations = db('personal_information');
+
+    const [user] = await users.where({ email });
+
+    if (!user) return res.sendStatus(400);
+
+    const [information] = await informations.where({ user_id: user.id });
+
+    res.json(information);
 });
 
 app.ws('/messages', (ws, req) => {
     ws.on('message', async (message) => {
+        const { email } = req.query;
+
         const formmatMessage = JSON.parse(message);
-        const data = await chat(formmatMessage, db);
+
+        const data = await chat(email, formmatMessage, db);
 
         data.on('data', text => {
             let formmatText = text.toString();

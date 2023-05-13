@@ -8,8 +8,12 @@ exports.up = function (knex) {
         table.string('age');
         table.string('weight');
         table.string('height');
+        table.integer('user_id').unsigned();
         table.string('current_physical_activity_level');
         table.string('physical_activities_already_practice');
+        table.timestamps(true, true);
+
+        table.foreign('user_id').references('users.id');
     });
 };
 

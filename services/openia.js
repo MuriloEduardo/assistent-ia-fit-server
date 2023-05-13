@@ -7,14 +7,26 @@ const configuration = new Configuration({
 
 const openai = new OpenAIApi(configuration);
 
-const chat = async (content, db) => {
+const chat = async (email, content, db) => {
+    const users = db('users');
     const instructionsTable = db('instructions');
-    let instructions = await instructionsTable.where({ user_id: 1 });
+    const personalInformationTable = db('personal_information');
 
-    const formatedInstructions = instructions.map(({ content }) => ({
+    const [user] = await users.where({ email });
+    let instructions = await instructionsTable.where({ user_id: user?.id });
+    let [personalInformation] = await personalInformationTable.where({ user_id: user?.id });
+
+    personalInformation = Object.entries(personalInformation).map(([key, value]) => `${key}: ${value}`).join(', ');
+
+    let formatedInstructions = instructions.map(({ content }) => ({
         content,
         role: 'system',
     }));
+
+    formatedInstructions = [...formatedInstructions, {
+        content: `Informações pessoais sobre usuário: ${personalInformation}`,
+        role: 'system',
+    }];
 
     const { data } = await openai.createChatCompletion(
         {
