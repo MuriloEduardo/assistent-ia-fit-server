@@ -16,9 +16,8 @@ const chat = async (email, content, db) => {
     let instructions = await instructionsTable.where({ user_id: user?.id });
     let [personalInformation] = await personalInformationTable.where({ user_id: user?.id });
 
-    const makeObjToString = (obj) => {
-        Object.entries(obj).map(([key, value]) => `${key}: ${value}`).join(', ')
-    };
+    const makeObjToString = obj =>
+        Object.entries(obj).map(([key, value]) => `${key}: ${value}`).join(', ');
 
     user = makeObjToString(user);
     personalInformation = makeObjToString(personalInformation);
