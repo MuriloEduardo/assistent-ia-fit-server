@@ -1,5 +1,7 @@
 require('dotenv').config();
 
+console.log('TESTE 4', process.env.PG_DATABASE_HOST);
+
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
