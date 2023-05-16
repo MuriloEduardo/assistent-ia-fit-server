@@ -1,4 +1,9 @@
-const { PG_DATABASE, PG_DATABASE_USER, PG_DATABASE_PASSWORD } = require('./utils/env');
+const {
+  PG_DATABASE,
+  PG_DATABASE_USER,
+  PG_DATABASE_PASSWORD,
+  PG_DATABASE_HOST
+} = require('./utils/env');
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
@@ -16,6 +21,7 @@ module.exports = {
   staging: {
     client: 'postgresql',
     connection: {
+      host: PG_DATABASE_HOST,
       database: PG_DATABASE,
       user: PG_DATABASE_USER,
       password: PG_DATABASE_PASSWORD
