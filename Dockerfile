@@ -12,6 +12,4 @@ EXPOSE 8080
 
 ENV NODE_ENV staging
 
-RUN npx knex migrate:latest
-
-CMD ["node", "index"]
+CMD ["node", "start"]
