@@ -26,6 +26,10 @@ module.exports = {
       user: PG_DATABASE_USER,
       password: PG_DATABASE_PASSWORD
     },
+    pool: {
+      min: 0,
+      max: 10
+    },
     migrations: {
       tableName: 'knex_migrations'
     }
