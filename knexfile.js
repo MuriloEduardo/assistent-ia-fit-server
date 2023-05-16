@@ -1,3 +1,5 @@
+const { DATABASE_URL } = require('./utils/env');
+
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
@@ -30,9 +32,7 @@ module.exports = {
   production: {
     client: 'postgresql',
     connection: {
-      database: 'my_db',
-      user: 'username',
-      password: 'password'
+      connectionString: DATABASE_URL,
     },
     pool: {
       min: 2,
