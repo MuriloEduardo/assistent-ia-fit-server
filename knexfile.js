@@ -1,9 +1,4 @@
-const {
-  PG_DATABASE,
-  PG_DATABASE_USER,
-  PG_DATABASE_HOST,
-  PG_DATABASE_PASSWORD,
-} = require('./utils/env');
+require('dotenv').config();
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
@@ -21,10 +16,10 @@ module.exports = {
   staging: {
     client: 'postgresql',
     connection: {
-      host: PG_DATABASE_HOST,
-      database: PG_DATABASE,
-      user: PG_DATABASE_USER,
-      password: PG_DATABASE_PASSWORD
+      host: process.env.PG_DATABASE_HOST,
+      database: process.env.PG_DATABASE,
+      user: process.env.PG_DATABASE_USER,
+      password: process.env.PG_DATABASE_PASSWORD
     },
     pool: {
       min: 2,
