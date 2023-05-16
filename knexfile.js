@@ -1,8 +1,8 @@
 const {
   PG_DATABASE,
   PG_DATABASE_USER,
+  PG_DATABASE_HOST,
   PG_DATABASE_PASSWORD,
-  PG_DATABASE_HOST
 } = require('./utils/env');
 
 /**
