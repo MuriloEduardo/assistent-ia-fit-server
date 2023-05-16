@@ -5,6 +5,8 @@ const {
   PG_DATABASE_PASSWORD,
 } = require('./utils/env');
 
+console.log('XOOOOOOOOOOT', process.env);
+
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
