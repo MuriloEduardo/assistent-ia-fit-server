@@ -15,8 +15,6 @@ app.use('/users', usersController);
 app.use('/messages', messagesController);
 app.use('/suggestions', suggestionsController);
 
-const { PORT } = require('./utils/env');
-
-app.listen(PORT, () =>
-    console.log(`Server listening on port ${PORT}`)
+app.listen(process.env.PORT, () =>
+    console.log(`Server listening on port ${process.env.PORT}`)
 );

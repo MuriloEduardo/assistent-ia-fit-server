@@ -3,7 +3,6 @@ require('dotenv').config();
 console.log('DATTTTTTTTTTTTTTTTTT', process.env);
 
 module.exports = {
-    PORT: process.env.PORT,
     NODE_ENV: process.env.NODE_ENV || 'development',
     OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     PG_DATABASE: process.env.PG_DATABASE,
