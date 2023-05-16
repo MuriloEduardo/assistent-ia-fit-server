@@ -2,7 +2,9 @@ require('dotenv').config();
 
 module.exports = {
     PORT: process.env.PORT,
-    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
     NODE_ENV: process.env.NODE_ENV || 'development',
-    PG_CONNECTION_STRING: process.env.PG_CONNECTION_STRING,
+    OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+    PG_DATABASE: process.env.PG_DATABASE,
+    PG_DATABASE_USER: process.env.PG_DATABASE_USER,
+    PG_DATABASE_PASSWORD: process.env.PG_DATABASE_PASSWORD,
 };
