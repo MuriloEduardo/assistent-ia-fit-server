@@ -1,4 +1,4 @@
-const { PG_CONNECTION_STRING } = require('./utils/env');
+const { PG_DATABASE, PG_DATABASE_USER, PG_DATABASE_PASSWORD } = require('./utils/env');
 
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
@@ -16,9 +16,9 @@ module.exports = {
   staging: {
     client: 'postgresql',
     connection: {
-      database: 'my_db',
-      user: 'username',
-      password: 'password'
+      database: PG_DATABASE,
+      user: PG_DATABASE_USER,
+      password: PG_DATABASE_PASSWORD
     },
     pool: {
       min: 2,
@@ -31,7 +31,11 @@ module.exports = {
 
   production: {
     client: 'postgresql',
-    connection: PG_CONNECTION_STRING,
+    connection: {
+      database: 'my_db',
+      user: 'username',
+      password: 'password'
+    },
     pool: {
       min: 2,
       max: 10
