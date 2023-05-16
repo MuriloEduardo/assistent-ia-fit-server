@@ -11,7 +11,6 @@ COPY . .
 EXPOSE 8080
 
 ENV NODE_ENV staging
-ENV PG_DATABASE_HOST $PG_DATABASE_HOST
 
 RUN npx knex migrate:latest
 
