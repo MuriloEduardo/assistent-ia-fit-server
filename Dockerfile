@@ -12,4 +12,4 @@ EXPOSE 8080
 
 ENV NODE_ENV staging
 
-CMD ["node", "start"]
+CMD ["npm", "start"]
