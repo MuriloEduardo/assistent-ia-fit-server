@@ -27,7 +27,7 @@ module.exports = {
       password: PG_DATABASE_PASSWORD
     },
     pool: {
-      min: 0,
+      min: 2,
       max: 10
     },
     migrations: {
