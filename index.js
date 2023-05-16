@@ -15,6 +15,8 @@ app.use('/users', usersController);
 app.use('/messages', messagesController);
 app.use('/suggestions', suggestionsController);
 
-app.listen(4000, () => {
-    console.log('Server listening on port 4000');
-});
+const { PORT } = require('./utils/env');
+
+app.listen(PORT, () =>
+    console.log(`Server listening on port ${PORT}`)
+);
