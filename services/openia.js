@@ -7,10 +7,13 @@ const configuration = new Configuration({
 });
 const openai = new OpenAIApi(configuration);
 
-const makeObjToString = obj =>
+const makeObjToString = obj => {
+    if (!obj) return '';
+
     Object.entries(obj)
         .filter(([key, value]) => !!value)
         .map(([key, value]) => `${key}: ${value}`).join(', ');
+};
 
 const chat = async (email, content, body, options) => {
     const usersTable = db('users');
