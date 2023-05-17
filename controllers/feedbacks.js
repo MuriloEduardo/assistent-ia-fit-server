@@ -13,9 +13,9 @@ router.post('/', async (req, res) => {
 
     await feedbacks.insert({
         url,
-        email,
         type,
         message,
+        user_id: user.id,
     });
 
     res.sendStatus(201);
