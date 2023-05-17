@@ -12,9 +12,19 @@ router.get('/', async (req, res) => {
     const suggestionsInstructionsTable = db('suggestions_instructions');
 
     const [user] = await usersTable.where({ email }).select('id', 'name');
-    const instructions = await instructionsTable.where({ user_id: user?.id });
+
+    if (!user) {
+        throw new Error('User not found');
+    }
+
     const [personalInformation] = await personalInformationTable.where({ user_id: user?.id });
-    const suggestionsInstructions = await suggestionsInstructionsTable.where({ user_id: user?.id })
+
+    const instructions = await instructionsTable
+        .where({ user_id: user?.id })
+        .orWhereNull('user_id');
+    const suggestionsInstructions = await suggestionsInstructionsTable
+        .where({ user_id: user?.id })
+        .orWhereNull('user_id');
 
     const messages = [{
         role: 'system',

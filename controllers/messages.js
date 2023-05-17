@@ -9,12 +9,20 @@ const makePayload = async (email, message) => {
     const personalInformationTable = db('personal_information');
 
     const [user] = await usersTable.where({ email }).select('id', 'name');
-    const instructions = await instructionsTable.where({ user_id: user?.id });
-    const [personalInformation] = await personalInformationTable.where({ user_id: user?.id });
+
+    if (!user) {
+        throw new Error('User not found');
+    }
+
+    const [personalInformation] = await personalInformationTable.where({ user_id: user.id });
+
+    const instructions = await instructionsTable
+        .where({ user_id: user.id })
+        .orWhereNull('user_id');
 
     const messages = [{
         role: 'system',
-        content: `Esse é o usuário: ${makeObjToString({ name: user?.name })}`,
+        content: `Esse é o usuário: ${makeObjToString({ name: user.name })}`,
     }];
 
     if (personalInformation) {
