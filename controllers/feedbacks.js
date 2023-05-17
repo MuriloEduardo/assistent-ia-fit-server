@@ -5,6 +5,7 @@ const router = express.Router();
 router.post('/', async (req, res) => {
     const { url, type, message, email } = req.body;
 
+    const users = db('users');
     const feedbacks = db('feedbacks');
 
     const [user] = await users.where({ email });
