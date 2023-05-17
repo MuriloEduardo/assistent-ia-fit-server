@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index",
-    "dev": "nodemon index",
-    "prestart": "npx knex migrate:latest"
+    "dev": "nodemon index"
   },
   "keywords": [],
   "author": "",
