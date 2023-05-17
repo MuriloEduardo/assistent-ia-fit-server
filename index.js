@@ -10,10 +10,12 @@ require('express-ws')(app);
 
 const usersController = require('./controllers/users');
 const messagesController = require('./controllers/messages');
+const feedbacksController = require('./controllers/feedbacks');
 const suggestionsController = require('./controllers/suggestions');
 
 app.use('/users', usersController);
 app.use('/messages', messagesController);
+app.use('/feedbacks', feedbacksController);
 app.use('/suggestions', suggestionsController);
 
 app.listen(process.env.PORT, () =>
