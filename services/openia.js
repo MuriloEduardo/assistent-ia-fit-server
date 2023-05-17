@@ -10,7 +10,7 @@ const openai = new OpenAIApi(configuration);
 const makeObjToString = obj => {
     if (!obj) return '';
 
-    Object.entries(obj)
+    return Object.entries(obj)
         .filter(([, value]) => !!value)
         .map(([key, value]) => `${key}: ${value}`).join(', ');
 };
