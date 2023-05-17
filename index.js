@@ -3,10 +3,10 @@ const express = require('express');
 
 const app = express();
 
-require('express-ws')(app);
-
 app.use(cors());
 app.use(express.json());
+
+require('express-ws')(app);
 
 const usersController = require('./controllers/users');
 const messagesController = require('./controllers/messages');
