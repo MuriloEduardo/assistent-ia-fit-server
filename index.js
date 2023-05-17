@@ -1,12 +1,9 @@
 const cors = require('cors');
 const express = require('express');
-const { CLIENT_URL } = require('./utils/env');
 
 const app = express();
 
-app.use(cors({
-    origin: CLIENT_URL,
-}));
+app.use(cors());
 app.use(express.json());
 
 require('express-ws')(app);
