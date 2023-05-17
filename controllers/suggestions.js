@@ -7,10 +7,12 @@ router.get('/', async (req, res) => {
     const { email } = req.query;
 
     const usersTable = db('users');
+    const instructionsTable = db('instructions');
     const personalInformationTable = db('personal_information');
     const suggestionsInstructionsTable = db('suggestions_instructions');
 
     const [user] = await usersTable.where({ email }).select('id', 'name');
+    const instructions = await instructionsTable.where({ user_id: user?.id });
     const [personalInformation] = await personalInformationTable.where({ user_id: user?.id });
     const suggestionsInstructions = await suggestionsInstructionsTable.where({ user_id: user?.id })
 
@@ -24,6 +26,15 @@ router.get('/', async (req, res) => {
             role: 'system',
             content: makeObjToString(personalInformation),
         });
+    }
+
+    if (instructions.length) {
+        const formatedInstructions = instructions.map(({ content }) => ({
+            role: 'system',
+            content,
+        }));
+
+        messages.push(...formatedInstructions);
     }
 
     if (suggestionsInstructions.length) {
