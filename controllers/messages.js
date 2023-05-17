@@ -1,14 +1,62 @@
+const db = require('../utils/db');
 const express = require('express');
 const router = express.Router();
-const { chat } = require('../services/openia');
+const { chat, makeObjToString } = require('../services/openia');
+
+const makePayload = async (email, message) => {
+    const usersTable = db('users');
+    const instructionsTable = db('instructions');
+    const personalInformationTable = db('personal_information');
+
+    const [user] = await usersTable.where({ email }).select('id', 'name');
+    const instructions = await instructionsTable.where({ user_id: user?.id });
+    const [personalInformation] = await personalInformationTable.where({ user_id: user?.id });
+
+    const messages = [{
+        role: 'system',
+        content: `Esse é o usuário: ${makeObjToString({ name: user?.name })}`,
+    }];
+
+    if (personalInformation) {
+        messages.push({
+            role: 'system',
+            content: makeObjToString(personalInformation),
+        });
+    }
+
+    if (instructions.length) {
+        const formatedInstructions = instructions.map(({ content }) => ({
+            role: 'system',
+            content,
+        }));
+
+        messages.push(...formatedInstructions);
+    }
+
+    if (message) {
+        const parseMessage = JSON.parse(message);
+
+        messages.push({
+            role: 'user',
+            content: parseMessage,
+        });
+    }
+
+    return {
+        model: 'gpt-3.5-turbo',
+        temperature: 0,
+        stream: true,
+        messages,
+    };
+};
 
 router.ws('/', (ws, req) => {
     ws.on('message', async (message) => {
         const { email } = req.query;
 
-        const parseMessage = JSON.parse(message);
+        const payload = await makePayload(email, message);
 
-        const data = await chat(email, parseMessage, { stream: true }, { responseType: 'stream' });
+        const data = await chat(payload, { responseType: 'stream' });
 
         data.on('data', text => {
             let formmatText = text.toString();
