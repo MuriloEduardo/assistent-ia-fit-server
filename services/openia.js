@@ -15,7 +15,7 @@ const makeObjToString = obj => {
         .map(([key, value]) => `${key}: ${value}`).join(', ');
 };
 
-const chat = async (email, content, body, options) => {
+const chat = async (email, userContent, body, options, suggestions = false) => {
     const usersTable = db('users');
     const instructionsTable = db('instructions');
     const personalInformationTable = db('personal_information');
@@ -24,10 +24,21 @@ const chat = async (email, content, body, options) => {
     let instructions = await instructionsTable.where({ user_id: user?.id });
     let [personalInformation] = await personalInformationTable.where({ user_id: user?.id });
 
+    let suggestionsInstructions;
+    if (suggestions) {
+        const suggestionsInstructionsTable = db('suggestions_instructions');
+        suggestionsInstructions = await suggestionsInstructionsTable.where({ user_id: user?.id });
+    }
+
     user = makeObjToString(user);
     personalInformation = makeObjToString(personalInformation);
 
     let formatedInstructions = instructions.map(({ content }) => ({
+        content,
+        role: 'system',
+    }));
+
+    let formatedSuggestionsInstructions = suggestionsInstructions.map(({ content }) => ({
         content,
         role: 'system',
     }));
@@ -42,6 +53,7 @@ const chat = async (email, content, body, options) => {
             content: `Informações físicas sobre usuário: ${personalInformation}`,
             role: 'system',
         },
+        ...formatedSuggestionsInstructions,
     ];
 
     const { data } = await openai.createChatCompletion(
@@ -51,7 +63,7 @@ const chat = async (email, content, body, options) => {
             temperature: 0,
             messages: [
                 ...formatedInstructions,
-                { role: 'user', content },
+                { role: 'user', userContent },
             ],
         },
         { ...options },
@@ -60,41 +72,6 @@ const chat = async (email, content, body, options) => {
     return data;
 };
 
-const completion = async (email, prompt) => {
-    const usersTable = db('users');
-    const instructionsTable = db('instructions');
-    const personalInformationTable = db('personal_information');
-
-    let [{ id: user_id, name }] = await usersTable.where({ email }).select('id', 'name');
-    let instructions = await instructionsTable.where({ user_id });
-    let [personalInformation] = await personalInformationTable.where({ user_id });
-
-    let user = makeObjToString({ name });
-    personalInformation = makeObjToString(personalInformation);
-
-    let formatedInstructions = instructions.map(({ content }) => content);
-
-    formatedInstructions = [
-        ...formatedInstructions,
-        `Informações sobre usuário: ${user}`,
-        `Informações físicas sobre usuário: ${personalInformation}`,
-    ];
-
-    formatedInstructions = formatedInstructions.join('\n');
-
-    const { data } = await openai.createCompletion({
-        model: 'text-davinci-003',
-        temperature: 0,
-        prompt: `
-            ${formatedInstructions}
-            ${prompt}
-        `,
-    });
-
-    return data;
-};
-
 module.exports = {
     chat,
-    completion,
 };
