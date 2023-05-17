@@ -11,7 +11,7 @@ const makeObjToString = obj => {
     if (!obj) return '';
 
     Object.entries(obj)
-        .filter(([key, value]) => !!value)
+        .filter(([, value]) => !!value)
         .map(([key, value]) => `${key}: ${value}`).join(', ');
 };
 
