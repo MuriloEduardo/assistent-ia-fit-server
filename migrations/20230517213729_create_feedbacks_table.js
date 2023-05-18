@@ -8,10 +8,9 @@ exports.up = function (knex) {
         table.string('url');
         table.string('type').notNullable();
         table.text('message').notNullable();
-        table.integer('user_id').unsigned();
+        table.string('email');
+        table.boolean('resolved').defaultTo(false);
         table.timestamps(true, true);
-
-        table.foreign('user_id').references('users.id');
     });
 };
 
