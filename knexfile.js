@@ -1,8 +1,10 @@
 const {
+  DATABASE_HOST,
   DATABASE_NAME,
   DATABASE_USER,
+  DATABASE_DEBUG,
   DATABASE_PASSWORD,
-  INSTANCE_CONNECTION_NAME,
+  DATABASE_SOCKETPATH,
 } = require('./utils/env');
 
 /**
@@ -36,11 +38,13 @@ module.exports = {
 
   production: {
     client: 'mysql',
+    debug: DATABASE_DEBUG,
     connection: {
-      database: DATABASE_NAME,
+      host: DATABASE_HOST,
       user: DATABASE_USER,
+      database: DATABASE_NAME,
       password: DATABASE_PASSWORD,
-      socketPath: INSTANCE_CONNECTION_NAME,
+      socketPath: DATABASE_SOCKETPATH,
     },
     pool: {
       min: 2,
