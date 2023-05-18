@@ -37,7 +37,6 @@ module.exports = {
   production: {
     client: 'mysql',
     connection: {
-      port: 3306,
       database: DATABASE_NAME,
       user: DATABASE_USER,
       password: DATABASE_PASSWORD,
