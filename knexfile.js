@@ -1,8 +1,8 @@
 const {
-  DATABASE,
+  DATABASE_NAME,
   DATABASE_USER,
-  DATABASE_HOST,
   DATABASE_PASSWORD,
+  INSTANCE_CONNECTION_NAME,
 } = require('./utils/env');
 
 /**
@@ -21,8 +21,7 @@ module.exports = {
   staging: {
     client: 'postgresql',
     connection: {
-      host: DATABASE_HOST,
-      database: DATABASE,
+      database: DATABASE_NAME,
       user: DATABASE_USER,
       password: DATABASE_PASSWORD
     },
@@ -39,10 +38,10 @@ module.exports = {
     client: 'mysql',
     connection: {
       port: 3306,
-      host: DATABASE_HOST,
-      database: DATABASE,
+      database: DATABASE_NAME,
       user: DATABASE_USER,
-      password: DATABASE_PASSWORD
+      password: DATABASE_PASSWORD,
+      socketPath: `/workspace/${INSTANCE_CONNECTION_NAME}`,
     },
     pool: {
       min: 2,
