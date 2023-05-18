@@ -40,7 +40,7 @@ module.exports = {
       database: DATABASE_NAME,
       user: DATABASE_USER,
       password: DATABASE_PASSWORD,
-      socketPath: `/workspace/${INSTANCE_CONNECTION_NAME}`,
+      socketPath: INSTANCE_CONNECTION_NAME,
     },
     pool: {
       min: 2,
