@@ -38,6 +38,7 @@ module.exports = {
   production: {
     client: 'mysql2',
     connection: {
+      port: 3306,
       host: DATABASE_HOST,
       database: DATABASE,
       user: DATABASE_USER,
