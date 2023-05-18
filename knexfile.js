@@ -36,7 +36,7 @@ module.exports = {
   },
 
   production: {
-    client: 'mysql2',
+    client: 'mysql',
     connection: {
       port: 3306,
       host: DATABASE_HOST,
