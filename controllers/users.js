@@ -71,11 +71,11 @@ router.get('/:email', async (req, res) => {
 
     const [user] = await users.where({ email });
 
-    if (!user) return res.sendStatus(400);
+    if (!user) return res.sendStatus(404);
 
     const [information] = await informations.where({ user_id: user.id });
 
-    res.json(information);
+    res.json({ user, information });
 });
 
 module.exports = router;
